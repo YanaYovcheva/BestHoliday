@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 
 
 class Destination(models.Model):
@@ -9,6 +10,16 @@ class Destination(models.Model):
         max_length=50
     )
     description = models.TextField()
+    slug = models.SlugField(
+        unique=True,
+        blank=True
+    )
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(f"{self.name}-{self.country}")
+        super().save(*args, **kwargs)
+
 
     def __str__(self):
         return f"{self.name}, {self.country}"
@@ -51,6 +62,10 @@ class Excursion(models.Model):
         max_length=20,
         choices=CategoryChoices.choices,
     )
+    slug = models.SlugField(
+        unique=True,
+        blank=True
+    )
     destination = models.ForeignKey(
         Destination,
         on_delete=models.CASCADE,
@@ -60,6 +75,11 @@ class Excursion(models.Model):
         Feature,
         blank=True,
     )
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(f'{self.title}-{self.start_date}')
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
