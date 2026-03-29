@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ excursion.title }} - BestHoliday{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            {% if excursion.image %}
+                <img src="{{ excursion.image.url }}" class="card-img-top" alt="{{ excursion.title }}">
+            {% endif %}
+
+            <div class="card-body">
+                <h1 class="card-title mb-3">{{ excursion.title }}</h1>
+
+                <p><strong>Destination:</strong> {{ excursion.destination.name }}, {{ excursion.destination.country }}</p>
+                <p><strong>Category:</strong> {{ excursion.category }}</p>
+                <p><strong>Price:</strong> {{ excursion.price }} lv.</p>
+                <p><strong>Start date:</strong> {{ excursion.start_date }}</p>
+                <p><strong>End date:</strong> {{ excursion.end_date }}</p>
+
+                <p class="mt-4">{{ excursion.description }}</p>
+
+                <h5 class="mt-4">Features</h5>
+                <ul>
+                    {% for feature in excursion.features.all %}
+                        <li>{{ feature.name }}</li>
+                    {% empty %}
+                        <li>No features listed.</li>
+                    {% endfor %}
+                </ul>
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'bookings:create' excursion.slug %}" class="btn btn-primary mt-3"> Book Now </a>
+                    <a href="{% url 'reviews:create' excursion.slug %}" class="btn btn-outline-primary mt-3"> Add Comment </a>
+
+                    {% if is_favorite %}
+                        <form method="post" action="{% url 'bookings:remove-favorite' excursion.slug %}" class="mt-3">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger">
+                                Remove from Favorites
+                            </button>
+                        </form>
+                    {% else %}
+                        <form method="post" action="{% url 'bookings:add-favorite' excursion.slug %}" class="mt-3">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-primary">
+                                Add to Favorites
+                            </button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+
+                {% if request.user.is_staff %}
+                    <div class="mt-4 d-flex gap-2">
+                        <a href="{% url 'excursions:excursion-edit' excursion.slug %}" class="btn btn-warning">Edit</a>
+                        <a href="{% url 'excursions:excursion-delete' excursion.slug %}" class="btn btn-danger">Delete</a>
+                    </div>
+                {% endif %}
+
+                <div class="mt-5">
+                    <h3>Comments</h3>
+
+                    {% for comment in excursion.comments.all %}
+                        <div class="card mb-3 shadow-sm">
+                            <div class="card-body">
+                                <p class="mb-2"><strong>{{ comment.user.username }}</strong></p>
+                                <p>{{ comment.content }}</p>
+                                <small class="text-muted">Created on: {{ comment.created_at }}</small>
+
+                                {% if request.user == comment.user %}
+                                    <div class="mt-3 d-flex gap-2">
+                                        <a href="{% url 'reviews:edit' comment.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                                        <a href="{% url 'reviews:delete' comment.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p>No comments yet.</p>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

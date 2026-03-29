@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Features - BestHoliday{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">All Features</h1>
+
+{% if request.user.is_staff %}
+    <a href="{% url 'excursions:feature-create' %}" class="btn btn-primary mb-4">
+        Add Feature
+    </a>
+{% endif %}
+
+<div class="row">
+    {% for feature in features %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ feature.name }}</h5>
+
+                    {% if request.user.is_staff %}
+                        <a href="{% url 'excursions:feature-edit' feature.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{% url 'excursions:feature-delete' feature.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>No features available yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

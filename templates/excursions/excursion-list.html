@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}All Excursions - BestHoliday{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">All Excursions</h1>
+
+    {% if request.user.is_staff %}
+        <a href="{% url 'excursions:excursion-create' %}" class="btn btn-primary mb-4">Add Excursion</a>
+    {% endif %}
+
+    <div class="row">
+        {% for excursion in excursions %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    {% if excursion.image %}
+                        <img src="{{ excursion.image.url }}" class="card-img-top" alt="{{ excursion.title }}">
+                    {% endif %}
+
+                    <div class="card-body">
+                        <h5 class="card-title">{{ excursion.title }}</h5>
+                        <p class="card-text">
+                            <strong>Destination:</strong> {{ excursion.destination.name }}<br>
+                            <strong>Category:</strong> {{ excursion.category }}<br>
+                            <strong>Price:</strong> {{ excursion.price }} lv.
+                        </p>
+
+                        <a href="{% url 'excursions:excursion-detail' excursion.slug %}" class="btn btn-outline-primary">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>No excursions available yet.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

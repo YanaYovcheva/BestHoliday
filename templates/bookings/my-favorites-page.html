@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}My Favorites - BestHoliday{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">My Favorite Excursions</h1>
+
+<div class="row">
+    {% for favorite in favorites %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                {% if favorite.excursion.image %}
+                    <img src="{{ favorite.excursion.image.url }}" class="card-img-top" alt="{{ favorite.excursion.title }}">
+                {% endif %}
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ favorite.excursion.title }}</h5>
+                    <p><strong>Destination:</strong> {{ favorite.excursion.destination.name }}</p>
+                    <p><strong>Price:</strong> {{ favorite.excursion.price }} lv.</p>
+
+                    <a href="{% url 'excursions:excursion-detail' favorite.excursion.slug %}" class="btn btn-primary btn-sm">
+                        View Details
+                    </a>
+
+                    <form method="post" action="{% url 'bookings:remove-favorite' favorite.excursion.slug %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                            Remove
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>You have no favorite excursions yet.</p>
+    {% endfor %}
+</div>
+{% endblock %}

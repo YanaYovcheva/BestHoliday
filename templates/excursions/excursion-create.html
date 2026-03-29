@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Excursion - BestHoliday{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm p-4">
+            <h1 class="h3 mb-4 text-center">Create Excursion</h1>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <button type="submit" class="btn btn-primary w-100">Create</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

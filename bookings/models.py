@@ -19,6 +19,14 @@ class Booking(models.Model):
         auto_now_add=True,
     )
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'excursion'],
+                name='unique_user_excursion_booking',
+            )
+        ]
+
     def __str__(self):
         return f'{self.user} - {self.excursion}'
 

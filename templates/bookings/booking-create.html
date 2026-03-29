@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Book Excursion - BestHoliday{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card shadow-sm p-4">
+            <h1 class="h3 mb-4 text-center">Book Excursion</h1>
+
+            <p><strong>Excursion:</strong> {{ excursion.title }}</p>
+            <p><strong>Destination:</strong> {{ excursion.destination.name }}, {{ excursion.destination.country }}</p>
+            <p><strong>Price:</strong> {{ excursion.price }} lv.</p>
+            <p><strong>Available seats:</strong> {{ excursion.available_seats }}</p>
+
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+
+                <button type="submit" class="btn btn-primary w-100">Confirm Booking</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
