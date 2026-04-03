@@ -23,20 +23,23 @@ class ExcursionDetailView(DetailView):
             context['is_favorite'] = self.object.favorites.filter(
                 user=self.request.user
             ).exists()
+            context['is_support'] = self.request.user.groups.filter(
+                name='Support'
+            ).exists()
         else:
             context['is_favorite'] = False
+            context['is_support'] = False
 
         return context
 
 
 class StaffRequiredMixin(UserPassesTestMixin):
     def test_func(self):
-        return self.request.user.is_staff
-
-
-class StaffRequiredMixin(UserPassesTestMixin):
-    def test_func(self):
-        return self.request.user.is_staff
+        return (
+            self.request.user.is_authenticated
+                and
+            self.request.user.groups.filter(name='Mangers').exists()
+        )
 
 
 class ExcursionCreateView(StaffRequiredMixin, CreateView):

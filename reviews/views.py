@@ -29,12 +29,18 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         context['excursion'] = self.excursion
         return context
 
-class CommentOwnerMixin(UserPassesTestMixin):
+class CommentPermissionMixin(UserPassesTestMixin):
     def test_func(self):
-        return self.request.user == self.get_object().user
+        user = self.request.user
+        comment = self.request.get_object()
+
+        is_owner = user == comment.user
+        is_support = user.groups.filter(name='Support').exists()
+
+        return user.is_authrnticated and (is_owner or is_support)
 
 
-class CommentEditView(LoginRequiredMixin, CommentOwnerMixin, UpdateView):
+class CommentEditView(LoginRequiredMixin, CommentPermissionMixin, UpdateView):
     model = Comment
     form_class = CommentForm
     template_name = 'reviews/comment-edit.html'
@@ -43,7 +49,7 @@ class CommentEditView(LoginRequiredMixin, CommentOwnerMixin, UpdateView):
         return reverse_lazy('excursions:excursion-detail', kwargs={'slug': self.object.excursion.slug})
 
 
-class CommentDeleteView(LoginRequiredMixin, CommentOwnerMixin, DeleteView):
+class CommentDeleteView(LoginRequiredMixin, CommentPermissionMixin, DeleteView):
     model = Comment
     template_name = 'reviews/comment-delete.html'
 
