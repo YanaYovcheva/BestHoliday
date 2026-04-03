@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load custom_tags %}
+
 {% block title %}{{ excursion.title }} - BestHoliday{% endblock %}
 
 {% block content %}
@@ -13,9 +15,9 @@
             <div class="card-body">
                 <h1 class="card-title mb-3">{{ excursion.title }}</h1>
 
-                <p><strong>Destination:</strong> {{ excursion.destination.name }}, {{ excursion.destination.country }}</p>
+                <p><strong>Destination:</strong> {{ excursion.destination|get_full_destination }}</p>
                 <p><strong>Category:</strong> {{ excursion.category }}</p>
-                <p><strong>Price:</strong> {{ excursion.price }} lv.</p>
+                <p><strong>Price:</strong> {{ excursion.price|floatformat:2 }} lv.</p>
                 <p><strong>Start date:</strong> {{ excursion.start_date }}</p>
                 <p><strong>End date:</strong> {{ excursion.end_date }}</p>
 

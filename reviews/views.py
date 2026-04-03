@@ -32,12 +32,12 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 class CommentPermissionMixin(UserPassesTestMixin):
     def test_func(self):
         user = self.request.user
-        comment = self.request.get_object()
+        comment = self.get_object()
 
         is_owner = user == comment.user
         is_support = user.groups.filter(name='Support').exists()
 
-        return user.is_authrnticated and (is_owner or is_support)
+        return user.is_authenticated and (is_owner or is_support)
 
 
 class CommentEditView(LoginRequiredMixin, CommentPermissionMixin, UpdateView):

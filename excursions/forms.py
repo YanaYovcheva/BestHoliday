@@ -5,7 +5,7 @@ from excursions.models import Excursion, Destination, Feature
 class ExcursionCreateEditForm(forms.ModelForm):
     class Meta:
         model = Excursion
-        exclude = ['available_seats']
+        exclude = ['available_seats', 'slug']
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Enter excursion title'}),
             'start_date': forms.DateInput(attrs={'type': 'date'}),

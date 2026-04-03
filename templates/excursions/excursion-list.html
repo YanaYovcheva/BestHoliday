@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% load custom_tags %}
+
 {% block title %}All Excursions - BestHoliday{% endblock %}
 
 {% block content %}
@@ -20,9 +22,9 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ excursion.title }}</h5>
                         <p class="card-text">
-                            <strong>Destination:</strong> {{ excursion.destination.name }}<br>
+                            <strong>Destination:</strong> {{ excursion.destination|get_full_destination }}<br>
                             <strong>Category:</strong> {{ excursion.category }}<br>
-                            <strong>Price:</strong> {{ excursion.price }} lv.
+                            <strong>Price:</strong> {{ excursion.price|floatformat:2 }} lv.
                         </p>
 
                         <a href="{% url 'excursions:excursion-detail' excursion.slug %}" class="btn btn-outline-primary">

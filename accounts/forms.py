@@ -31,6 +31,11 @@ class UserEditForm(forms.ModelForm):
             'first_name': forms.TextInput(attrs={'placeholder': 'Enter first name'}),
             'last_name': forms.TextInput(attrs={'placeholder': 'Enter last name'}),
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].disabled = True
+        self.fields['email'].help_text = 'Email address cannot be changed'
 
 
 class ProfileEditForm(forms.ModelForm):
