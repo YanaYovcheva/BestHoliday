@@ -53,7 +53,7 @@
                     {% endif %}
                 {% endif %}
 
-                {% if request.user.is_staff %}
+                {% if request.user|has_group:"Managers" %}
                     <div class="mt-4 d-flex gap-2">
                         <a href="{% url 'excursions:excursion-edit' excursion.slug %}" class="btn btn-warning">Edit</a>
                         <a href="{% url 'excursions:excursion-delete' excursion.slug %}" class="btn btn-danger">Delete</a>

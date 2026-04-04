@@ -7,7 +7,7 @@
 {% block content %}
     <h1 class="mb-4">All Excursions</h1>
 
-    {% if request.user.is_staff %}
+    {% if request.user|has_group:"Managers" %}
         <a href="{% url 'excursions:excursion-create' %}" class="btn btn-primary mb-4">Add Excursion</a>
     {% endif %}
 

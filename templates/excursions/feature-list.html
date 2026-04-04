@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
 
+{% load custom_tags %}
+
 {% block title %}Features - BestHoliday{% endblock %}
 
 {% block content %}
 <h1 class="mb-4">All Features</h1>
 
-{% if request.user.is_staff %}
+{% if request.user|has_group:"Managers" %}
     <a href="{% url 'excursions:feature-create' %}" class="btn btn-primary mb-4">
         Add Feature
     </a>

@@ -1,8 +1,10 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from excursions.forms import ExcursionCreateEditForm, DestinationCreateEditForm, FeatureCreateEditForm
 from excursions.models import Excursion, Destination, Feature
+from excursions.serializers import DestinationSerializer
 
 
 class ExcursionListView(ListView):
@@ -38,7 +40,7 @@ class StaffRequiredMixin(UserPassesTestMixin):
         return (
             self.request.user.is_authenticated
                 and
-            self.request.user.groups.filter(name='Mangers').exists()
+            self.request.user.groups.filter(name='Managers').exists()
         )
 
 
@@ -64,7 +66,16 @@ class ExcursionDeleteView(StaffRequiredMixin, DeleteView):
     success_url = reverse_lazy('excursions:excursion-list')
 
 
-# TODO make the destination views REST
+class ListCreateDestinationApiView(ListCreateAPIView):
+    queryset = Destination.objects.all()
+    serializer_class = DestinationSerializer
+
+
+class RetrieveUpdateDestroyDestinationApiView(RetrieveUpdateDestroyAPIView):
+    queryset = Destination.objects.all()
+    serializer_class = DestinationSerializer
+
+
 class DestinationListView(ListView):
     model = Destination
     template_name = 'excursions/destination-list.html'
