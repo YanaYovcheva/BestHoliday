@@ -1,10 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, ListView
 from bookings.forms import BookingCreateForm
 from bookings.models import Booking, Favourite
+from bookings.tasks import send_booking_confirmation_email
 from excursions.models import Excursion
 
 
@@ -20,7 +22,14 @@ class BookingCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         form.instance.excursion = self.excursion
-        return super().form_valid(form)
+        response = super().form_valid(form)
+
+        transaction.on_commit(lambda: send_booking_confirmation_email.delay(
+            self.request.user.email,
+            self.request.user.username,
+            self.excursion.title,
+        ))
+        return response
 
     def get_success_url(self):
         return reverse_lazy('bookings:my-bookings')

@@ -138,6 +138,15 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025
+DEFAULT_FROM_EMAIL = 'no-reply@bestholiday.com'
+
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+
 AUTH_USER_MODEL = 'accounts.BestHolidayUser'
 
 LOGIN_REDIRECT_URL = 'common:home'
