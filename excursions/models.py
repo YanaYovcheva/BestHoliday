@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from excursions.validators import validate_positive_price
 
 
 class Destination(models.Model):
@@ -50,6 +51,7 @@ class Excursion(models.Model):
     price = models.DecimalField(
         max_digits=8,
         decimal_places=2,
+        validators=[validate_positive_price]
     )
     start_date = models.DateField()
     end_date = models.DateField()
@@ -57,7 +59,6 @@ class Excursion(models.Model):
         upload_to='excursions/'
     )
     description = models.TextField()
-    available_seats = models.PositiveIntegerField()
     category = models.CharField(
         max_length=20,
         choices=CategoryChoices.choices,
