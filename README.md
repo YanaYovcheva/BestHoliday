@@ -64,6 +64,8 @@ Bookings-related moderation tasks
 
 These groups can be created and configured through the Django admin panel.
 
+### Deployment not finished
+
 ## REST API
 
 The project includes a REST API endpoint for destinations.
