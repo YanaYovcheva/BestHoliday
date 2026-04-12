@@ -4,14 +4,22 @@ services:
     build: .
     container_name: bestholiday_web
     restart: always
-    command: gunicorn bestholiday.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn myproject.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - .:/app
-      - static_volume:/app/static
+      - static_volume:/app/staticfiles
     depends_on:
       - db
     environment:
-      - DEBUG=0
+      - SECRET_KEY=django-insecure-3m9lj%3x%s2+n^+f_i10nhr2(&ugmo=s*=ynqaa8h@p_)f6nhl
+      - DEBUG=False
+      - DB_NAME=best_holiday
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=db
+      - DB_PORT=5432
+      - ALLOWED_HOSTS=51.20.38.1,127.0.0.1,localhost
+      - CSRF_TRUSTED_ORIGINS=http://51.20.38.1,http://127.0.0.1,http://localhost
       - DATABASE_URL=postgres://postgres:postgres@db:5432/best_holiday
 
   db:
@@ -32,7 +40,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - static_volume:/app/static
+      - static_volume:/app/staticfiles
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - web
