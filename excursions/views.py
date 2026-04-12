@@ -1,8 +1,10 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from excursions.forms import ExcursionCreateEditForm, DestinationCreateEditForm, FeatureCreateEditForm
+from excursions.forms import ExcursionCreateEditForm, DestinationCreateEditForm, FeatureCreateEditForm, \
+    ExcursionSearchForm
 from excursions.models import Excursion, Destination, Feature
 from excursions.serializers import DestinationSerializer
 
@@ -11,6 +13,28 @@ class ExcursionListView(ListView):
     model = Excursion
     template_name = 'excursions/excursion-list.html'
     context_object_name = 'excursions'
+
+    def get_queryset(self):
+        queryset = Excursion.objects.all()
+        self.form = ExcursionSearchForm(self.request.GET)
+
+        if self.form.is_valid():
+            query = self.form.cleaned_data.get('query')
+
+            if query:
+                queryset = queryset.filter(
+                    Q(title__icontains=query) |
+                    Q(destination__name__icontains=query) |
+                    Q(destination__country__icontains=query) |
+                    Q(category__icontains=query)
+                )
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_form'] = self.form
+        return context
 
 
 class ExcursionDetailView(DetailView):

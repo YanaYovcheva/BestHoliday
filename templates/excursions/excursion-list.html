@@ -7,6 +7,19 @@
 {% block content %}
     <h1 class="mb-4">All Excursions</h1>
 
+    <form method="get" class="mb-4">
+        <div class="row g-2 align-items-center">
+            <div class="col-md-7">
+                {{ search_form.query }}
+            </div>
+            <div class="col-md-1">
+                <button type="submit" class="btn btn-primary w-100">
+                    Search
+                </button>
+            </div>
+        </div>
+    </form>
+
     {% if request.user|has_group:"Managers" %}
         <a href="{% url 'excursions:excursion-create' %}" class="btn btn-primary mb-4">Add Excursion</a>
     {% endif %}

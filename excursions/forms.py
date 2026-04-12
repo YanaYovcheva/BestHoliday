@@ -32,3 +32,15 @@ class FeatureCreateEditForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={'placeholder': 'Enter feature name'}),
         }
+
+
+class ExcursionSearchForm(forms.Form):
+    query = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'Search excursions...',
+                'class': 'form-control',
+            }
+        ),
+    )

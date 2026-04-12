@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group
 from django.test import TestCase
 from django.urls import reverse
 from excursions.models import Destination, Excursion
@@ -25,6 +24,23 @@ class ExcursionViewsTests(TestCase):
             destination=self.destination,
         )
 
+        self.second_destination = Destination.objects.create(
+            name='Rome',
+            country='Italy',
+            description='Beautiful city',
+        )
+
+        self.second_excursion = Excursion.objects.create(
+            title='Summer in Rome',
+            price=1500,
+            start_date='2026-06-01',
+            end_date='2026-06-07',
+            image='excursions/test2.jpg',
+            description='Amazing summer excursion',
+            category=Excursion.CategoryChoices.CULTURAL,
+            destination=self.second_destination,
+        )
+
     def test_excursion_list_view_returns_200(self):
         response = self.client.get(reverse('excursions:excursion-list'))
 
@@ -47,3 +63,15 @@ class ExcursionViewsTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'excursions/excursion-detail.html')
 
+
+    def test_excursion_search_bar_results_by_title(self):
+        response = self.client.get(reverse('excursions:excursion-list'), {'query':'Paris'})
+
+        self.assertContains(response, self.excursion.title)
+        self.assertNotContains(response, self.second_excursion.title)
+
+    def test_excursion_search_bar_results_by_country(self):
+        response = self.client.get(reverse('excursions:excursion-list'), {'query':'France'})
+
+        self.assertContains(response, self.destination.name)
+        self.assertNotContains(response, self.second_destination.name)
