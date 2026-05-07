@@ -1,4 +1,4 @@
-# BestHoliday
+# 🏝️ BestHoliday
 
 BestHoliday is a Django web application for discovering and booking excursions.  
 The platform provides both a public section for browsing destinations and excursions,   
@@ -7,7 +7,7 @@ and leave comments.
 
 ---
 
-## Features
+## 🚀 Features
 
 - User registration, login, and logout
 - Extended custom user model with profile
@@ -23,7 +23,7 @@ and leave comments.
 - REST API for destinations
 - Asynchronous task setup with Celery for booking confirmation emails
 
-## Tech Stack
+## ⚙️ Tech Stack
 
 - Python
 - Django
@@ -31,11 +31,12 @@ and leave comments.
 - PostgreSQL
 - Celery
 - Redis
+- Docker Compose
 - Bootstrap
 - Pillow
 - python-dotenv
 
-## Project Structure
+## 🏗️ Project Structure
 
 - `accounts` – authentication, custom user, profiles
 - `common` – common pages and shared templates
@@ -44,7 +45,7 @@ and leave comments.
 - `reviews` – comments
 - `tests` – project tests
 
-## User Groups and Permissions
+## 👥 User Groups and Permissions
 
 The project uses two user groups:
 
@@ -64,8 +65,6 @@ Bookings-related moderation tasks
 
 These groups can be created and configured through the Django admin panel.
 
-### Deployment not finished
-
 ## REST API
 
 The project includes a REST API endpoint for destinations.
@@ -75,8 +74,12 @@ Example endpoints:
 - GET /excursions/api/destinations/
 - GET /excursions/api/destinations/int:pk/
 
-## Installation
+## Asynchronous Tasks
 
+The project includes Celery configuration for asynchronous task processing.
+- Booking confirmation email task
+
+## 🛠️ Installation
 ### 1. Clone the repository
 
 ```
@@ -104,3 +107,30 @@ pip install -r requirements.txt
 python manage.py runserver
 ```
 By default, the server runs on http://127.0.0.1:8000/
+
+## Deployment
+### The project is deployed on AWS EC2 using:
+- Docker
+- Docker Compose
+- Gunicorn
+- Nginx
+- PostgreSQL
+
+## Docker setup
+### Build and run containers
+```
+docker-compose build
+docker-compose up -d
+```
+
+### Run migrations inside the container and collect staticfiles
+```
+docker compose exec web python manage.py migrate
+docker compose exec web python manage.py collectstatic --noinput
+```
+
+### Visit:
+```
+http://51.20.38.1/
+http://<YOUR_EC2_IP>/
+```
